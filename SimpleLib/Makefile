@@ -22,22 +22,22 @@ setup-nuget::
 	nuget install Embeddinator-4000 -Version $(PACKAGE_VERSION) -SolutionDirectory CSharp/
 
 clean-nuget::
-	rm -r CSharp/packages/
+	rm -rf CSharp/packages/
 
-objc-mac::
+objc-mac:: setup-nuget
 	CSharp/packages/Embeddinator-4000.$(PACKAGE_VERSION)/tools/objcgen -o binding-objc-mac -c CSharp/SimpleLib/bin/Debug/SimpleLib.dll --p=macos-modern --abi=x86_64 
 
 clean-objc-mac::
-	rm -r binding-objc-mac
+	rm -rf binding-objc-mac
 
-objc-ios::
+objc-ios:: setup-nuget
 	CSharp/packages/Embeddinator-4000.$(PACKAGE_VERSION)/tools/objcgen -o binding-objc-ios -c CSharp/SimpleLib-iOS/bin/Debug/SimpleLib-iOS.dll --p=ios
 
 clean-objc-ios::
-	rm -r binding-objc-ios
+	rm -rf binding-objc-ios
 
-java-android::
+java-android:: setup-nuget
 	mono ./CSharp/packages/Embeddinator-4000.0.4.0/tools/Embeddinator-4000.exe -o binding-java-android -c CSharp/SimpleLib-Android/bin/Debug/SimpleLib-Android.dll --p=Android --t=shared --gen=Java
 
 clean-java-android::
-	rm -r binding-java-android
+	rm -rf binding-java-android
