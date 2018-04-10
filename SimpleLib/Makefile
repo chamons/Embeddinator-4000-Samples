@@ -3,7 +3,7 @@ PACKAGE_VERSION := $(shell grep "var version" $(EMBEDDINATOR_PATH)/build/Packagi
 NUGET = $(EMBEDDINATOR_PATH)/build/Embeddinator-4000.$(PACKAGE_VERSION).nupkg
 NUGET_LOCAL = ~/nuget/
 
-all:: setup-nuget csharp objc-mac objc-ios java-android
+all:: objc-mac objc-ios java-android
 
 clean:: clean-nuget clean-csharp clean-objc-mac clean-objc-ios clean-java-android
 
@@ -24,20 +24,27 @@ setup-nuget::
 clean-nuget::
 	rm -rf CSharp/packages/
 
-objc-mac:: setup-nuget
-	CSharp/packages/Embeddinator-4000.$(PACKAGE_VERSION)/tools/objcgen -o binding-objc-mac -c CSharp/SimpleLib/bin/Debug/SimpleLib.dll --p=macos-modern --abi=x86_64 
+objc-mac:: setup-nuget csharp
+	CSharp/packages/Embeddinator-4000.$(PACKAGE_VERSION)/tools/objcgen -o binding-objc-mac -c CSharp/SimpleLib/bin/Debug/SimpleLib.dll --p=macos-modern --abi=x86_64 --debug
+	rm -rf ObjC/SimpleConsumer-macOS/Framework/
+	mkdir -p ObjC/SimpleConsumer-macOS/Framework/
+	cp -R binding-objc-mac/SimpleLib.framework ObjC/SimpleConsumer-macOS/Framework/
+	xcodebuild -project ObjC/SimpleConsumer-macOS/SimpleConsumer-macOS.xcodeproj
+	open ObjC/SimpleConsumer-macOS/SimpleConsumer-macOS.xcodeproj
 
 clean-objc-mac::
-	rm -rf binding-objc-mac
+	rm -rf binding-objc-mac/
+	rm -rf ObjC/SimpleConsumer-macOS/Framework/
+	xcodebuild -project ObjC/SimpleConsumer-macOS/SimpleConsumer-macOS.xcodeproj clean
 
-objc-ios:: setup-nuget
-	CSharp/packages/Embeddinator-4000.$(PACKAGE_VERSION)/tools/objcgen -o binding-objc-ios -c CSharp/SimpleLib-iOS/bin/Debug/SimpleLib-iOS.dll --p=ios
+objc-ios:: setup-nuget csharp
+	CSharp/packages/Embeddinator-4000.$(PACKAGE_VERSION)/tools/objcgen -o binding-objc-ios -c CSharp/SimpleLib-iOS/bin/Debug/SimpleLib-iOS.dll --p=ios --debug
 
 clean-objc-ios::
 	rm -rf binding-objc-ios
 
-java-android:: setup-nuget
-	mono ./CSharp/packages/Embeddinator-4000.0.4.0/tools/Embeddinator-4000.exe -o binding-java-android -c CSharp/SimpleLib-Android/bin/Debug/SimpleLib-Android.dll --p=Android --t=shared --gen=Java
+java-android:: setup-nuget csharp
+	mono ./CSharp/packages/Embeddinator-4000.0.4.0/tools/Embeddinator-4000.exe -o binding-java-android -c CSharp/SimpleLib-Android/bin/Debug/SimpleLib-Android.dll --p=Android --t=shared --gen=Java --debug
 
 clean-java-android::
 	rm -rf binding-java-android
