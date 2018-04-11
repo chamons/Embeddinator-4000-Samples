@@ -2,3 +2,5 @@ CSharp/packages/
 binding-objc-mac/
 binding-objc-ios/
 binding-java-android/
+ObjC/SimpleConsumer-macOS/Framework
+ObjC/SimpleConsumer-macOS/build
