@@ -4,3 +4,7 @@ binding-objc-ios/
 binding-java-android/
 ObjC/SimpleConsumer-macOS/Framework
 ObjC/SimpleConsumer-macOS/build
+ObjC/SimpleConsumer-iOS/Framework
+ObjC/SimpleConsumer-iOS/build
+xcuserdata/
+

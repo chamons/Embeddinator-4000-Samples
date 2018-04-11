@@ -39,9 +39,16 @@ clean-objc-mac::
 
 objc-ios:: setup-nuget csharp
 	CSharp/packages/Embeddinator-4000.$(PACKAGE_VERSION)/tools/objcgen -o binding-objc-ios -c CSharp/SimpleLib-iOS/bin/Debug/SimpleLib-iOS.dll --p=ios --debug
+	rm -rf ObjC/SimpleConsumer-iOS/Framework/
+	mkdir -p ObjC/SimpleConsumer-iOS/Framework/
+	cp -R binding-objc-ios/SimpleLib-iOS.framework ObjC/SimpleConsumer-iOS/Framework/
+	xcodebuild -project ObjC/SimpleConsumer-iOS/SimpleConsumer-iOS.xcodeproj
+	open ObjC/SimpleConsumer-iOS/SimpleConsumer-iOS.xcodeproj
 
 clean-objc-ios::
 	rm -rf binding-objc-ios
+	rm -rf ObjC/SimpleConsumer-iOS/Framework/
+	xcodebuild -project ObjC/SimpleConsumer-iOS/SimpleConsumer-iOS.xcodeproj clean
 
 java-android:: setup-nuget csharp
 	mono ./CSharp/packages/Embeddinator-4000.0.4.0/tools/Embeddinator-4000.exe -o binding-java-android -c CSharp/SimpleLib-Android/bin/Debug/SimpleLib-Android.dll --p=Android --t=shared --gen=Java --debug
