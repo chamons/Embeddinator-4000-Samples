@@ -17,9 +17,12 @@ clean-csharp::
 	msbuild /nologo /v:quiet CSharp/SimpleLib.sln /t:clean
 
 setup-nuget::
+ifndef SKIP_NUGET_INSTALL
 	@if ! [ -d $(NUGET_LOCAL) ]; then echo "Setup a local nuget feed to ~/nuget" && exit 1; fi
 	cp $(NUGET) $(NUGET_LOCAL)
 	nuget install Embeddinator-4000 -Version $(PACKAGE_VERSION) -SolutionDirectory CSharp/
+endif
+
 
 clean-nuget::
 	rm -rf CSharp/packages/
