@@ -52,6 +52,9 @@ clean-objc-ios::
 
 java-android:: setup-nuget csharp
 	mono ./CSharp/packages/Embeddinator-4000.0.4.0/tools/Embeddinator-4000.exe -o binding-java-android -c CSharp/SimpleLib-Android/bin/Debug/SimpleLib-Android.dll --p=Android --t=shared --gen=Java --debug
+	rm -rf Java/Framework/
+	mkdir -p Java/Framework/
+	cp binding-java-android/SimpleLib_Android.aar Java/Framework/
 
 clean-java-android::
 	rm -rf binding-java-android
